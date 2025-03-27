@@ -42,15 +42,21 @@ jobs:
       - name: Build and push container frontend
         working-directory: ./frontend
         run: |-
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_APP_NAME }}:${VERSION}"
-
+          VERSION="v1.0.4"
+          VERSION_NO_QUOTES="${VERSION//\'/}"  # Remove single quotes
+          
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_APP_NAME }}:${VERSION_NO_QUOTES}"
+          
           docker build -f ./dockerfile -t "${IMAGE_NAME}" .
           docker push "${IMAGE_NAME}"
-
+          
       - name: Build and push container backend
         working-directory: ./backend
         run: |-
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_APP_NAME }}:${VERSION}"
+          VERSION="v1.0.4"
+          VERSION_NO_QUOTES="${VERSION//\'/}"  # Remove single quotes
+
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_APP_NAME }}:${VERSION_NO_QUOTES}"
 
           docker build -f ./dockerfile -t "${IMAGE_NAME}" .
           docker push "${IMAGE_NAME}"

@@ -4,9 +4,13 @@ on:
   pull_request:
     branches:
       - develop
-  push: 
-    branches: 
+  push:
+    branches:
       - develop
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   testing:
@@ -48,8 +52,8 @@ jobs:
       - name: Install dependencies
         working-directory: ./backend
         run: |
-                python -m pip install --upgrade pip
-                pip install -r requirement.txt
+          python -m pip install --upgrade pip
+          pip install -r requirement.txt
 
       - name: Set database data
         working-directory: ./backend
@@ -60,7 +64,7 @@ jobs:
         working-directory: ./backend
         run: |
           pytest
-  
+
   build:
     runs-on: ubuntu-latest
 

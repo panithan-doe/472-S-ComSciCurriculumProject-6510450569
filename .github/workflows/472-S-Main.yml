@@ -1,9 +1,12 @@
 name: CD-github-action
 
-on: 
-  push: 
-    branches: 
+on:
+  push:
+    branches:
       - main
+
+permissions:
+  contents: read
 
 jobs:
   release:
@@ -18,7 +21,7 @@ jobs:
 
       - name: Generate tag
         run: |-
-          TAG_NAME="v1.0.${{ github.run_number }}"
+          TAG_NAME="v1.1.${{ github.run_number }}"
 
           echo "VERSION='${TAG_NAME}'" >> $GITHUB_ENV
 
@@ -28,8 +31,8 @@ jobs:
           tag_name: ${VERSION}
           name: "Release ${{ github.ref_name }}"
           body: "🚀 New release ${{ github.ref_name }} is live!"
-          draft: false  # Set true to create as draft
-          prerelease: false  # Set true for pre-release
+          draft: false # Set true to create as draft
+          prerelease: false # Set true for pre-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -42,18 +45,16 @@ jobs:
       - name: Build and push container frontend
         working-directory: ./frontend
         run: |-
-          VERSION="v1.0.4"
           VERSION_NO_QUOTES="${VERSION//\'/}"  # Remove single quotes
-          
+
           IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_APP_NAME }}:${VERSION_NO_QUOTES}"
-          
+
           docker build -f ./dockerfile -t "${IMAGE_NAME}" .
           docker push "${IMAGE_NAME}"
-          
+
       - name: Build and push container backend
         working-directory: ./backend
         run: |-
-          VERSION="v1.0.4"
           VERSION_NO_QUOTES="${VERSION//\'/}"  # Remove single quotes
 
           IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_APP_NAME }}:${VERSION_NO_QUOTES}"
